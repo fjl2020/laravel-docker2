@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  web:
+    container_name: ${APP_NAME}_web
+    build:
+      context: ./docker/web
+    ports:
+      - 9000:80
+    volumes:
+      - /laravel-docker2/:/var/www/app
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'homestead'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'homestead'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'secret'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'example'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - 3306:3306
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+    volumes:
+      - ./mysqldata:/var/lib/mysql
+  cache:
+    container_name: ${APP_NAME}_cache
+    image: redis:4.0.11
+    ports:
+      - 63790:6379
+    
+      
